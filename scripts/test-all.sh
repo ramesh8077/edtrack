@@ -1,4 +1,4 @@
-#!/bin/bash
+    #!/bin/bash
 # save as scripts/test-all.sh
 set -e
 
