@@ -76,8 +76,11 @@ ${CONTEXT_INJECTION_DEFENSE}`;
       tokensUsed: usage.totalTokens,
     });
   } catch (error) {
-    console.error("[generate-path]", error);
-    // Returning 500 triggers the frontend fallback UI
-    return new Response("Failed to generate path. Please try again.", { status: 500 });
+    console.error("[generate-path] CRITICAL ERROR:", error);
+    if (error instanceof Error) {
+      console.error("[generate-path] Stack:", error.stack);
+      return new Response(`Failed to generate path: ${error.message}`, { status: 500 });
+    }
+    return new Response("Failed to generate path. An unknown error occurred.", { status: 500 });
   }
 }

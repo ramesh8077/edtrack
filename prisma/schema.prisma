@@ -1,4 +1,3 @@
-// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,7 +7,217 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─── Enums ──────────────────────────────────────
+model User {
+  id               String         @id @default(cuid())
+  email            String         @unique
+  name             String
+  image            String?
+  role             Role           @default(LEARNER)
+  bio              String?
+  mentorVerified   Boolean        @default(false)
+  passwordHash     String?
+  emailVerified    DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  accounts         Account[]
+  chatSessions     ChatSession[]
+  paths            LearningPath[]
+  createdTemplates PathTemplate[]
+  attempts         QuizAttempt[]
+  reviews          Review[]
+  sessions         Session[]
+
+  @@index([role])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model LearningPath {
+  id          String        @id @default(cuid())
+  userId      String
+  title       String
+  goal        String
+  level       Level
+  targetWeeks Int
+  source      PathSource    @default(AI_GENERATED)
+  templateId  String?
+  progress    Float         @default(0)
+  status      PathStatus    @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  template    PathTemplate? @relation(fields: [templateId], references: [id])
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  modules     Module[]
+
+  @@index([userId, status])
+}
+
+model Module {
+  id             String       @id @default(cuid())
+  pathId         String
+  title          String
+  description    String
+  order          Int
+  estimatedHours Int
+  completedAt    DateTime?
+  lessons        Lesson[]
+  path           LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  quiz           Quiz?
+
+  @@index([pathId, order])
+}
+
+model Lesson {
+  id               String    @id @default(cuid())
+  moduleId         String
+  title            String
+  contentMd        String
+  order            Int
+  estimatedMinutes Int
+  resources        Json?
+  completedAt      DateTime?
+  module           Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@index([moduleId, order])
+}
+
+model Quiz {
+  id           String        @id @default(cuid())
+  moduleId     String        @unique
+  title        String
+  passingScore Int           @default(70)
+  questions    Question[]
+  module       Module        @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  attempts     QuizAttempt[]
+}
+
+model Question {
+  id            String       @id @default(cuid())
+  quizId        String
+  prompt        String
+  type          QuestionType
+  options       Json?
+  correctAnswer Json
+  explanation   String?
+  difficulty    Int          @default(1)
+  order         Int
+  quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  quizId      String
+  userId      String
+  score       Float
+  answers     Json
+  aiFeedback  String?
+  completedAt DateTime @default(now())
+  quiz        Quiz     @relation(fields: [quizId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, completedAt])
+}
+
+model ChatSession {
+  id        String    @id @default(cuid())
+  userId    String
+  moduleId  String?
+  title     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@index([userId, updatedAt])
+}
+
+model Message {
+  id         String      @id @default(cuid())
+  sessionId  String
+  role       MessageRole
+  content    String
+  tokensUsed Int?
+  createdAt  DateTime    @default(now())
+  session    ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+}
+
+model PathTemplate {
+  id              String         @id @default(cuid())
+  mentorId        String
+  title           String
+  slug            String         @unique
+  goal            String
+  level           Level
+  structure       Json
+  isPublished     Boolean        @default(false)
+  enrollmentCount Int            @default(0)
+  avgRating       Float          @default(0)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  paths           LearningPath[]
+  mentor          User           @relation(fields: [mentorId], references: [id])
+  reviews         Review[]
+
+  @@index([isPublished, avgRating])
+}
+
+model Review {
+  id         String       @id @default(cuid())
+  userId     String
+  templateId String
+  rating     Int
+  comment    String?
+  createdAt  DateTime     @default(now())
+  template   PathTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  user       User         @relation(fields: [userId], references: [id])
+
+  @@unique([userId, templateId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  action    String
+  resource  String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([actorId, createdAt])
+}
 
 enum Role {
   LEARNER
@@ -45,220 +254,4 @@ enum MessageRole {
   USER
   ASSISTANT
   SYSTEM
-}
-
-// ─── Auth.js Models (NextAuth v5) ───────────────
-
-model User {
-  id               String    @id @default(cuid())
-  email            String    @unique
-  name             String
-  image            String?
-  role             Role      @default(LEARNER)
-  bio              String?
-  mentorVerified   Boolean   @default(false)
-  passwordHash     String?
-  emailVerified    DateTime?
-  accounts         Account[]
-  sessions         Session[]
-  paths            LearningPath[]
-  createdTemplates PathTemplate[]
-  attempts         QuizAttempt[]
-  chatSessions     ChatSession[]
-  reviews          Review[]
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-
-  @@index([role])
-}
-
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
-
-// ─── Core Domain Models ─────────────────────────
-
-model LearningPath {
-  id          String     @id @default(cuid())
-  userId      String
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title       String
-  goal        String     @db.Text
-  level       Level
-  targetWeeks Int
-  source      PathSource @default(AI_GENERATED)
-  templateId  String?
-  template    PathTemplate? @relation(fields: [templateId], references: [id])
-  modules     Module[]
-  progress    Float      @default(0)
-  status      PathStatus @default(ACTIVE)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  @@index([userId, status])
-}
-
-model Module {
-  id             String       @id @default(cuid())
-  pathId         String
-  path           LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
-  title          String
-  description    String       @db.Text
-  order          Int
-  estimatedHours Int
-  lessons        Lesson[]
-  quiz           Quiz?
-  completedAt    DateTime?
-
-  @@index([pathId, order])
-}
-
-model Lesson {
-  id               String   @id @default(cuid())
-  moduleId         String
-  module           Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  title            String
-  contentMd        String   @db.Text
-  order            Int
-  estimatedMinutes Int
-  resources        Json?
-  completedAt      DateTime?
-
-  @@index([moduleId, order])
-}
-
-model Quiz {
-  id           String       @id @default(cuid())
-  moduleId     String       @unique
-  module       Module       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  title        String
-  passingScore Int          @default(70)
-  questions    Question[]
-  attempts     QuizAttempt[]
-}
-
-model Question {
-  id            String       @id @default(cuid())
-  quizId        String
-  quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  prompt        String       @db.Text
-  type          QuestionType
-  options       Json?
-  correctAnswer Json
-  explanation   String?      @db.Text
-  difficulty    Int          @default(1)
-  order         Int
-}
-
-model QuizAttempt {
-  id          String   @id @default(cuid())
-  quizId      String
-  quiz        Quiz     @relation(fields: [quizId], references: [id])
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  score       Float
-  answers     Json
-  aiFeedback  String?  @db.Text
-  completedAt DateTime @default(now())
-
-  @@index([userId, completedAt])
-}
-
-model ChatSession {
-  id        String    @id @default(cuid())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  moduleId  String?
-  title     String
-  messages  Message[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  @@index([userId, updatedAt])
-}
-
-model Message {
-  id         String      @id @default(cuid())
-  sessionId  String
-  session    ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  role       MessageRole
-  content    String      @db.Text
-  tokensUsed Int?
-  createdAt  DateTime    @default(now())
-
-  @@index([sessionId, createdAt])
-}
-
-model PathTemplate {
-  id              String         @id @default(cuid())
-  mentorId        String
-  mentor          User           @relation(fields: [mentorId], references: [id])
-  title           String
-  slug            String         @unique
-  goal            String         @db.Text
-  level           Level
-  structure       Json
-  isPublished     Boolean        @default(false)
-  enrollmentCount Int            @default(0)
-  avgRating       Float          @default(0)
-  paths           LearningPath[]
-  reviews         Review[]
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-
-  @@index([isPublished, avgRating])
-}
-
-model Review {
-  id         String       @id @default(cuid())
-  userId     String
-  user       User         @relation(fields: [userId], references: [id])
-  templateId String
-  template   PathTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
-  rating     Int
-  comment    String?      @db.Text
-  createdAt  DateTime     @default(now())
-
-  @@unique([userId, templateId])
-}
-
-model AuditLog {
-  id        String   @id @default(cuid())
-  actorId   String
-  action    String
-  resource  String
-  metadata  Json?
-  createdAt DateTime @default(now())
-
-  @@index([actorId, createdAt])
 }
