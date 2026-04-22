@@ -29,8 +29,8 @@ export default function SignupPage() {
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              &ldquo;This platform helped me transition from a support role into frontend development
-              with a customized learning path that actually made sense.&rdquo;
+              &ldquo;This platform helped me transition from a support role into frontend
+              development with a customized learning path that actually made sense.&rdquo;
             </p>
             <footer className="text-sm">Alex Chen, Learner</footer>
           </blockquote>

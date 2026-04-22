@@ -1,8 +1,8 @@
-import { streamText } from 'ai';
-import { auth } from '@/lib/auth';
-import { getAIModel } from '@/lib/ai/providers';
-import { chatMessageSchema } from '@/lib/validations';
-import { checkRateLimit, aiRateLimiter } from '@/lib/rate-limit';
+import { streamText } from "ai";
+import { auth } from "@/lib/auth";
+import { getAIModel } from "@/lib/ai/providers";
+import { chatMessageSchema } from "@/lib/validations";
+import { checkRateLimit, aiRateLimiter } from "@/lib/rate-limit";
 
 // Limit chat executions intentionally to prevent abuse
 export const maxDuration = 30;
@@ -39,10 +39,14 @@ export async function POST(req: Request) {
     const { messages, lessonContext, level = "LEARNER" } = parsed.data;
 
     // Safety checks against Prompt injections in the most recent messages
-    const lastUserMessage = [...messages].reverse().find(m => m.role === "user");
+    const lastUserMessage = [...messages].reverse().find((m) => m.role === "user");
     if (lastUserMessage) {
       const p = lastUserMessage.content.toLowerCase();
-      if (p.includes("ignore previous") || p.includes("system prompt") || p.includes("ignore all")) {
+      if (
+        p.includes("ignore previous") ||
+        p.includes("system prompt") ||
+        p.includes("ignore all")
+      ) {
         return new Response("Prompt injection recognized.", { status: 400 });
       }
     }
@@ -81,7 +85,7 @@ ${TUTOR_INJECTION_DEFENSE}`;
         // We log it async in the background to not hold up the stream end process.
         console.log(`[Stream finished] Tokens used: ${usage.totalTokens}`);
         // TODO: Map to db.message.update() eventually if needed synchronously
-      }
+      },
     });
 
     return result.toTextStreamResponse();

@@ -10,14 +10,16 @@ export default async function AdminPage() {
   }
 
   const users = await db.user.findMany({
-    orderBy: { createdAt: "desc" }
+    orderBy: { createdAt: "desc" },
   });
 
   return (
     <div className="container mx-auto py-12 px-4 max-w-6xl">
       <div className="mb-8 border-b pb-4">
         <h1 className="text-3xl font-heading font-bold">Platform Governance</h1>
-        <p className="text-muted-foreground mt-2">Manage personnel, mentor verifications, and monitor platform abuse.</p>
+        <p className="text-muted-foreground mt-2">
+          Manage personnel, mentor verifications, and monitor platform abuse.
+        </p>
       </div>
 
       <div className="space-y-6">

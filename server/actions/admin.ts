@@ -13,8 +13,9 @@ async function logAudit(action: string, resource: string, metadata: Record<strin
         actorId: session.user.id,
         action,
         resource,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         metadata: metadata as Record<string, any>,
-      }
+      },
     });
   }
 }
@@ -28,7 +29,7 @@ export async function verifyMentor(userId: string, isVerified: boolean) {
 
     const user = await db.user.update({
       where: { id: userId },
-      data: { mentorVerified: isVerified }
+      data: { mentorVerified: isVerified },
     });
 
     await logAudit("VERIFY_MENTOR", userId, { isVerified });

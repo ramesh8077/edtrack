@@ -26,8 +26,7 @@ async function main() {
   // NOTE: In production, passwords would be hashed with argon2.
   // For seed convenience, we store a placeholder hash.
   // Real hashing: import argon2 from "argon2"; await argon2.hash("password123")
-  const placeholderHash =
-    "$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$RdescudvJCsgt3ub+b+daw";
+  const placeholderHash = "$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$RdescudvJCsgt3ub+b+daw";
 
   await prisma.user.create({
     data: {
@@ -108,7 +107,12 @@ async function main() {
           },
           {
             title: "JavaScript Essentials",
-            lessons: ["Variables & Types", "Functions & Closures", "Async/Await", "DOM Manipulation"],
+            lessons: [
+              "Variables & Types",
+              "Functions & Closures",
+              "Async/Await",
+              "DOM Manipulation",
+            ],
           },
           {
             title: "React Fundamentals",
@@ -166,11 +170,21 @@ async function main() {
         modules: [
           {
             title: "Python for ML",
-            lessons: ["NumPy Essentials", "Pandas DataFrames", "Matplotlib Viz", "Scikit-learn Intro"],
+            lessons: [
+              "NumPy Essentials",
+              "Pandas DataFrames",
+              "Matplotlib Viz",
+              "Scikit-learn Intro",
+            ],
           },
           {
             title: "Supervised Learning",
-            lessons: ["Linear Regression", "Logistic Regression", "Decision Trees", "Model Evaluation"],
+            lessons: [
+              "Linear Regression",
+              "Logistic Regression",
+              "Decision Trees",
+              "Model Evaluation",
+            ],
           },
           {
             title: "Neural Networks",
@@ -185,7 +199,13 @@ async function main() {
 
   // ─── Sample Learning Paths ────────────────────
 
-  const templateChoices = [frontendTemplate, dsaTemplate, mlTemplate, frontendTemplate, dsaTemplate];
+  const templateChoices = [
+    frontendTemplate,
+    dsaTemplate,
+    mlTemplate,
+    frontendTemplate,
+    dsaTemplate,
+  ];
   const progressValues = [0.75, 0.45, 0.2, 0.9, 0.1];
 
   for (let i = 0; i < learners.length; i++) {

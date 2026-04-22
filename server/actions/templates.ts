@@ -29,7 +29,7 @@ export async function createTemplate(data: TemplateInput) {
         level: data.level || "INTERMEDIATE",
         structure: (data.structure as Record<string, unknown>) || {},
         isPublished: false,
-      }
+      },
     });
 
     revalidatePath("/studio");
@@ -53,7 +53,7 @@ export async function updateTemplate(templateId: string, data: TemplateInput) {
         goal: data.goal,
         level: data.level,
         structure: (data.structure as Record<string, unknown>) || {},
-      }
+      },
     });
 
     revalidatePath(`/studio/builder/${templateId}`);
@@ -62,7 +62,6 @@ export async function updateTemplate(templateId: string, data: TemplateInput) {
     return { success: false, error: "Failed to save template edits" };
   }
 }
-
 
 export async function publishTemplate(templateId: string, isPublished: boolean) {
   try {
@@ -73,7 +72,7 @@ export async function publishTemplate(templateId: string, isPublished: boolean) 
 
     const template = await db.pathTemplate.update({
       where: { id: templateId, mentorId: session.user.id },
-      data: { isPublished }
+      data: { isPublished },
     });
 
     revalidatePath("/studio");
@@ -94,7 +93,7 @@ export async function enrollFromTemplate(templateId: string) {
     // Usually we would fetch the template and explode its structure into LearningPath -> Module -> Lesson
     // Using transaction
     const template = await db.pathTemplate.findUnique({
-      where: { id: templateId }
+      where: { id: templateId },
     });
 
     if (!template) {
@@ -110,13 +109,13 @@ export async function enrollFromTemplate(templateId: string) {
         level: template.level,
         targetWeeks: 4,
         source: "TEMPLATE",
-        templateId: template.id
-      }
+        templateId: template.id,
+      },
     });
 
     await db.pathTemplate.update({
       where: { id: template.id },
-      data: { enrollmentCount: { increment: 1 } }
+      data: { enrollmentCount: { increment: 1 } },
     });
 
     revalidatePath("/dashboard");

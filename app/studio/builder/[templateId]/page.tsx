@@ -11,7 +11,7 @@ export default async function BuilderPage({ params }: { params: Promise<{ templa
   }
 
   const template = await db.pathTemplate.findUnique({
-    where: { id: templateId, mentorId: session.user.id }
+    where: { id: templateId, mentorId: session.user.id },
   });
 
   if (!template) {
@@ -20,7 +20,7 @@ export default async function BuilderPage({ params }: { params: Promise<{ templa
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl h-[calc(100vh-4rem)] flex flex-col">
-       <TemplateBuilder initialData={template} />
+      <TemplateBuilder initialData={template} />
     </div>
   );
 }

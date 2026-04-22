@@ -41,24 +41,30 @@ export function AnalyticsChart({ data }: { data: { date: Date; minutes: number }
               <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis 
-            dataKey="date" 
-            tickLine={false} 
-            axisLine={false} 
-            tick={{ fontSize: 12 }} 
-            tickMargin={10} 
+          <XAxis
+            dataKey="date"
+            tickLine={false}
+            axisLine={false}
+            tick={{ fontSize: 12 }}
+            tickMargin={10}
             minTickGap={20}
-            stroke="hsl(var(--muted-foreground))" 
-          />
-          <YAxis 
-            tickLine={false} 
-            axisLine={false} 
-            tick={{ fontSize: 12 }} 
             stroke="hsl(var(--muted-foreground))"
           />
-          <Tooltip 
-            contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))', backgroundColor: 'hsl(var(--background))' }}
-            formatter={(value) => value !== undefined ? [`${value} min`, "Studied"] : ["0 min", "Studied"]} 
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tick={{ fontSize: 12 }}
+            stroke="hsl(var(--muted-foreground))"
+          />
+          <Tooltip
+            contentStyle={{
+              borderRadius: "8px",
+              border: "1px solid hsl(var(--border))",
+              backgroundColor: "hsl(var(--background))",
+            }}
+            formatter={(value) =>
+              value !== undefined ? [`${value} min`, "Studied"] : ["0 min", "Studied"]
+            }
           />
           <Area
             type="monotone"

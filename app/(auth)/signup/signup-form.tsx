@@ -48,7 +48,7 @@ export function SignupForm() {
         const formData = new FormData();
         formData.append("email", data.email);
         formData.append("password", data.password);
-        
+
         const signInResult = await signIn("credentials", {
           email: data.email,
           password: data.password,
@@ -126,11 +126,13 @@ export function SignupForm() {
                 {...form.register("confirmPassword")}
               />
               {form.formState.errors.confirmPassword && (
-                <p className="text-sm text-destructive">{form.formState.errors.confirmPassword.message}</p>
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.confirmPassword.message}
+                </p>
               )}
             </div>
           </div>
-          
+
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>

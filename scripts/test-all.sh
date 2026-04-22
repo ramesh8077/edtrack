@@ -1,6 +1,7 @@
     #!/bin/bash
 # save as scripts/test-all.sh
 set -e
+export AUTH_SECRET="test-secret-key-1234567890"
 
 echo "🧪 Running full test suite..."
 

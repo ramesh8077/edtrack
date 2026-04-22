@@ -11,14 +11,14 @@ import { useParams } from "next/navigation";
 export function ChatPanel() {
   const params = useParams();
   const lessonId = params.lessonId as string | undefined;
-  
+
   const [input, setInput] = useState("");
 
   const { messages, status, sendMessage } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/ai/chat",
       body: { lessonId: lessonId || "general" },
-    })
+    }),
   });
 
   const isLoading = status === "streaming" || status === "submitted";
@@ -30,7 +30,7 @@ export function ChatPanel() {
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!input.trim() || isLoading) return;
-    
+
     const val = input;
     setInput("");
     await sendMessage({ text: val });
@@ -57,22 +57,30 @@ export function ChatPanel() {
         {messages.length === 0 && (
           <div className="text-center text-muted-foreground text-sm flex flex-col items-center justify-center p-6 border border-dashed rounded-lg bg-muted/10 mt-10">
             <Bot className="h-8 w-8 mb-2 opacity-50" />
-            <p>I am your contextual AI tutor. Ask me to explain concepts, give examples, or quiz you on this lesson.</p>
+            <p>
+              I am your contextual AI tutor. Ask me to explain concepts, give examples, or quiz you
+              on this lesson.
+            </p>
           </div>
         )}
-        
+
         {messages.map((m: Message) => (
-          <div key={m.id} className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            {m.role !== 'user' && (
+          <div
+            key={m.id}
+            className={`flex gap-3 ${m.role === "user" ? "justify-end" : "justify-start"}`}
+          >
+            {m.role !== "user" && (
               <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0 mt-0.5">
                 <Bot className="h-3.5 w-3.5 text-primary" />
               </div>
             )}
-            <div className={`text-sm py-2 px-3 rounded-lg max-w-[85%] ${m.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'}`}>
+            <div
+              className={`text-sm py-2 px-3 rounded-lg max-w-[85%] ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"}`}
+            >
               <div className="whitespace-pre-wrap leading-relaxed">
-                {m.parts.map((part, i: number) => (
-                  part.type === 'text' ? <span key={i}>{part.text}</span> : null
-                ))}
+                {m.parts.map((part, i: number) =>
+                  part.type === "text" ? <span key={i}>{part.text}</span> : null,
+                )}
               </div>
             </div>
           </div>
@@ -80,12 +88,21 @@ export function ChatPanel() {
         {isLoading && (
           <div className="flex gap-3 justify-start opacity-60">
             <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-               <Bot className="h-3.5 w-3.5 text-primary animate-pulse" />
+              <Bot className="h-3.5 w-3.5 text-primary animate-pulse" />
             </div>
             <div className="text-sm py-3 px-3 rounded-lg bg-muted flex items-center gap-1">
-              <span className="w-1 h-1 rounded-full bg-foreground/60 animate-bounce" style={{ animationDelay: "0ms" }}></span>
-              <span className="w-1 h-1 rounded-full bg-foreground/60 animate-bounce" style={{ animationDelay: "150ms" }}></span>
-              <span className="w-1 h-1 rounded-full bg-foreground/60 animate-bounce" style={{ animationDelay: "300ms" }}></span>
+              <span
+                className="w-1 h-1 rounded-full bg-foreground/60 animate-bounce"
+                style={{ animationDelay: "0ms" }}
+              ></span>
+              <span
+                className="w-1 h-1 rounded-full bg-foreground/60 animate-bounce"
+                style={{ animationDelay: "150ms" }}
+              ></span>
+              <span
+                className="w-1 h-1 rounded-full bg-foreground/60 animate-bounce"
+                style={{ animationDelay: "300ms" }}
+              ></span>
             </div>
           </div>
         )}
@@ -93,7 +110,7 @@ export function ChatPanel() {
 
       <div className="p-3 border-t bg-background">
         <form onSubmit={handleSubmit} className="flex gap-2 relative">
-          <Textarea 
+          <Textarea
             value={input}
             onChange={handleInputChange}
             placeholder="Ask a question about this lesson..."
@@ -106,7 +123,12 @@ export function ChatPanel() {
               }
             }}
           />
-          <Button type="submit" size="icon" disabled={!input.trim() || isLoading} className="absolute right-1 bottom-1 h-8 w-8 rounded-full">
+          <Button
+            type="submit"
+            size="icon"
+            disabled={!input.trim() || isLoading}
+            className="absolute right-1 bottom-1 h-8 w-8 rounded-full"
+          >
             <Send className="h-4 w-4" />
           </Button>
         </form>
@@ -114,4 +136,3 @@ export function ChatPanel() {
     </aside>
   );
 }
-

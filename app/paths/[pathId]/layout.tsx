@@ -46,11 +46,13 @@ export default async function PathLayout({
         <div className="p-4 border-b border-border/40 sticky top-0 bg-background/95 backdrop-blur z-10 shadow-sm">
           <h2 className="font-semibold text-sm line-clamp-2 leading-tight">{path.title}</h2>
           <div className="flex items-center gap-2 mt-2">
-            <span className="text-xs text-muted-foreground font-medium">{Math.round(path.progress)}% Complete</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              {Math.round(path.progress)}% Complete
+            </span>
             <div className="h-1.5 flex-1 bg-muted rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-primary transition-all duration-500 ease-out" 
-                style={{ width: `${path.progress}%` }} 
+              <div
+                className="h-full bg-primary transition-all duration-500 ease-out"
+                style={{ width: `${path.progress}%` }}
               />
             </div>
           </div>

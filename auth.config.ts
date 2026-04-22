@@ -16,7 +16,7 @@ export const authConfig = {
       },
       async authorize() {
         // This will be overridden in lib/auth.ts to include DB logic
-        return null; 
+        return null;
       },
     }),
   ],

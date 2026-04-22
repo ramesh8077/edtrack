@@ -11,13 +11,13 @@ export async function createChatSession(title: string, moduleId?: string) {
     if (!session?.user?.role || !can(session.user.role, "chat:create")) {
       return { success: false, error: "Unauthorized" };
     }
-    
+
     const chat = await db.chatSession.create({
       data: {
         userId: session.user.id,
         title,
         moduleId,
-      }
+      },
     });
 
     return { success: true, data: chat };
@@ -32,9 +32,9 @@ export async function deleteChatSession(sessionId: string) {
     if (!session?.user?.role || !can(session.user.role, "chat:create")) {
       return { success: false, error: "Unauthorized" };
     }
-    
+
     await db.chatSession.delete({
-      where: { id: sessionId, userId: session.user.id }
+      where: { id: sessionId, userId: session.user.id },
     });
 
     revalidatePath("/dashboard"); // or specific path bounds

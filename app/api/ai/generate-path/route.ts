@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     // 3. Request Validation
     const body = await req.json();
     const parsed = pathGoalSchema.safeParse(body);
-    
+
     if (!parsed.success) {
       return new Response("Invalid request payload", { status: 400 });
     }

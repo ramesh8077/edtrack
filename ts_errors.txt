@@ -1,0 +1,10 @@
+app/studio/page.tsx(43,27): error TS7006: Parameter 't' implicitly has an 'any' type.
+app/templates/page.tsx(69,19): error TS2304: Cannot find name 'Button'.
+app/templates/page.tsx(73,20): error TS2304: Cannot find name 'Button'.
+components/studio/template-builder.tsx(155,46): error TS2532: Object is possibly 'undefined'.
+components/studio/template-builder.tsx(155,46): error TS2532: Object is possibly 'undefined'.
+components/studio/template-builder.tsx(164,46): error TS2532: Object is possibly 'undefined'.
+components/studio/template-builder.tsx(164,69): error TS2532: Object is possibly 'undefined'.
+components/studio/template-builder.tsx(174,46): error TS2532: Object is possibly 'undefined'.
+components/studio/template-builder.tsx(174,46): error TS2532: Object is possibly 'undefined'.
+components/studio/template-builder.tsx(184,38): error TS2532: Object is possibly 'undefined'.

@@ -14,7 +14,7 @@ export async function completeLesson(lessonId: string) {
 
     const lesson = await db.lesson.update({
       where: { id: lessonId },
-      data: { completedAt: new Date() }
+      data: { completedAt: new Date() },
     });
 
     revalidatePath(`/dashboard`);
@@ -24,7 +24,12 @@ export async function completeLesson(lessonId: string) {
   }
 }
 
-export async function submitQuizAttempt(quizId: string, score: number, answersRaw: Record<string, unknown>, aiFeedback?: string) {
+export async function submitQuizAttempt(
+  quizId: string,
+  score: number,
+  answersRaw: Record<string, unknown>,
+  aiFeedback?: string,
+) {
   try {
     const session = await auth();
     if (!session?.user?.role || !can(session.user.role, "quiz:attempt")) {
@@ -37,8 +42,8 @@ export async function submitQuizAttempt(quizId: string, score: number, answersRa
         userId: session.user.id,
         score,
         answers: answersRaw as Record<string, unknown>,
-        aiFeedback
-      }
+        aiFeedback,
+      },
     });
 
     return { success: true, data: attempt };

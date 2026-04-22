@@ -31,31 +31,31 @@ export function ModuleTree({ modules, pathId }: { modules: Module[]; pathId: str
             {module.lessons.map((lesson) => {
               const active = pathname.includes(`/lessons/${lesson.id}`);
               return (
-                <Link 
-                  key={lesson.id} 
+                <Link
+                  key={lesson.id}
                   href={`/paths/${pathId}/lessons/${lesson.id}`}
                   className={`flex items-start gap-2 px-2 py-1.5 rounded-md text-sm transition-colors ${active ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted text-foreground/80 hover:text-foreground"}`}
                 >
                   <div className="mt-0.5 shrink-0">
                     {lesson.completedAt ? (
-                       <CheckCircle2 className="h-4 w-4 text-primary" />
+                      <CheckCircle2 className="h-4 w-4 text-primary" />
                     ) : (
-                       <Circle className="h-4 w-4" />
+                      <Circle className="h-4 w-4" />
                     )}
                   </div>
                   <span className="line-clamp-2 leading-snug">{lesson.title}</span>
                 </Link>
               );
             })}
-            
+
             {module.quiz && (
-               <Link 
-                  href={`/paths/${pathId}/quiz/${module.quiz.id}`}
-                  className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors ${pathname.includes(`/quiz/${module.quiz.id}`) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted text-foreground/80 hover:text-foreground"}`}
-               >
-                 <HelpCircle className="h-4 w-4 text-purple-500" />
-                 <span>Module Quiz</span>
-               </Link>
+              <Link
+                href={`/paths/${pathId}/quiz/${module.quiz.id}`}
+                className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors ${pathname.includes(`/quiz/${module.quiz.id}`) ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted text-foreground/80 hover:text-foreground"}`}
+              >
+                <HelpCircle className="h-4 w-4 text-purple-500" />
+                <span>Module Quiz</span>
+              </Link>
             )}
           </div>
         </div>

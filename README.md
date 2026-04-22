@@ -45,11 +45,13 @@ LearnLoop AI is a production-grade adaptive learning platform where self-learner
 ## ⚙️ Local Setup
 
 ### Prerequisites
+
 - Node.js 20+
 - npm or pnpm
 - A free Neon.tech account (Postgres) or Docker
 
 ### Steps
+
 1. **Clone & Install:**
    ```bash
    git clone <repo-url>

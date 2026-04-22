@@ -5,9 +5,7 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["bom1"],
-  "crons": [
-    { "path": "/api/cron/aggregate-stats", "schedule": "0 2 * * *" }
-  ],
+  "crons": [{ "path": "/api/cron/aggregate-stats", "schedule": "0 2 * * *" }],
   "headers": [
     {
       "source": "/(.*)",

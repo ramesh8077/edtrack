@@ -86,10 +86,7 @@ export async function registerUser(formData: z.infer<typeof signupSchema>) {
 /**
  * Authenticate with email and password
  */
-export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData,
-) {
+export async function authenticate(prevState: string | undefined, formData: FormData) {
   // 1. Rate limit check
   const ip = await getIpIdentifier();
   const limit = await checkRateLimit(authRateLimiter, `login:${ip}`);

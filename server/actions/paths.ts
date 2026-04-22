@@ -19,7 +19,7 @@ export async function createPath(data: CreatePathInput) {
     if (!session?.user?.role || !can(session.user.role, "path:create")) {
       return { success: false, error: "Unauthorized" };
     }
-    
+
     // Minimal placeholder implementation mapped to DB schema structure
     // Normally zod parse the struct here:
     // const parsed = ... data
@@ -31,7 +31,7 @@ export async function createPath(data: CreatePathInput) {
         level: data.level || "BEGINNER",
         targetWeeks: data.targetWeeks || 4,
         source: data.source || "AI_GENERATED",
-      }
+      },
     });
 
     revalidatePath("/dashboard");
@@ -47,7 +47,7 @@ export async function deletePath(pathId: string) {
     if (!session?.user?.role || !can(session.user.role, "path:delete")) {
       return { success: false, error: "Unauthorized" };
     }
-    
+
     await db.learningPath.delete({ where: { id: pathId, userId: session.user.id } });
     revalidatePath("/dashboard");
     return { success: true };
@@ -62,12 +62,12 @@ export async function pausePath(pathId: string) {
     if (!session?.user?.role || !can(session.user.role, "path:update")) {
       return { success: false, error: "Unauthorized" };
     }
-    
+
     await db.learningPath.update({
       where: { id: pathId, userId: session.user.id },
-      data: { status: "PAUSED" }
+      data: { status: "PAUSED" },
     });
-    
+
     revalidatePath("/dashboard");
     return { success: true };
   } catch {

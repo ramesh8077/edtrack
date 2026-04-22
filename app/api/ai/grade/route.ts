@@ -10,12 +10,14 @@ import { z } from "zod";
 export const maxDuration = 30;
 
 const payloadSchema = z.object({
-  questions: z.array(z.object({
-    questionId: z.string(),
-    prompt: z.string(),
-    userAnswer: z.string(),
-    rubric: z.string().optional(),
-  }))
+  questions: z.array(
+    z.object({
+      questionId: z.string(),
+      prompt: z.string(),
+      userAnswer: z.string(),
+      rubric: z.string().optional(),
+    }),
+  ),
 });
 
 export async function POST(req: Request) {
@@ -36,7 +38,7 @@ export async function POST(req: Request) {
     // 3. Request Validation
     const body = await req.json();
     const parsed = payloadSchema.safeParse(body);
-    
+
     if (!parsed.success) {
       return new Response("Invalid request payload", { status: 400 });
     }

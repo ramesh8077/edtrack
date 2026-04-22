@@ -5,16 +5,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, Menu, UserCircle, BookOpen, GraduationCap, LayoutDashboard, Terminal } from "lucide-react";
+import {
+  LogOut,
+  Menu,
+  UserCircle,
+  BookOpen,
+  GraduationCap,
+  LayoutDashboard,
+  Terminal,
+} from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Session } from "next-auth";
 
@@ -33,7 +41,7 @@ export function Navbar({ session }: NavbarProps) {
   // Determine navigation structures relative to role
   const getNavLinks = () => {
     const links = [];
-    
+
     // Default public links
     if (!session) {
       links.push({ href: "/templates", label: "Explore Paths", icon: BookOpen });
@@ -49,7 +57,7 @@ export function Navbar({ session }: NavbarProps) {
         links.push({ href: "/dashboard", label: "Dashboard", icon: LayoutDashboard });
       }
     }
-    
+
     return links;
   };
 
@@ -72,9 +80,7 @@ export function Navbar({ session }: NavbarProps) {
             >
               <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
             </svg>
-            <span className="hidden font-bold sm:inline-block">
-              LearnLoop AI
-            </span>
+            <span className="hidden font-bold sm:inline-block">LearnLoop AI</span>
           </Link>
 
           <nav className="hidden md:flex gap-6">
@@ -83,9 +89,7 @@ export function Navbar({ session }: NavbarProps) {
                 key={link.href}
                 href={link.href}
                 className={`flex items-center text-sm font-medium transition-colors hover:text-primary ${
-                  pathname.startsWith(link.href)
-                    ? "text-foreground"
-                    : "text-muted-foreground"
+                  pathname.startsWith(link.href) ? "text-foreground" : "text-muted-foreground"
                 }`}
               >
                 {link.label}
@@ -96,23 +100,30 @@ export function Navbar({ session }: NavbarProps) {
 
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          
+
           {session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={session.user.image ?? ""} alt={session.user.name} />
-                    <AvatarFallback>{session.user.name.charAt(0).toUpperCase()}</AvatarFallback>
+                    <AvatarImage
+                      src={session.user?.image ?? ""}
+                      alt={session.user?.name || "User"}
+                    />
+                    <AvatarFallback>
+                      {session.user?.name?.charAt(0)?.toUpperCase() || "U"}
+                    </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{session.user.name}</p>
+                    <p className="text-sm font-medium leading-none">
+                      {session.user?.name || "User"}
+                    </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      {session.user.email}
+                      {session.user?.email || ""}
                     </p>
                     <div className="inline-flex mt-1">
                       <span className="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold text-muted-foreground">
@@ -130,7 +141,10 @@ export function Navbar({ session }: NavbarProps) {
                 </DropdownMenuItem>
                 <form action="/api/auth/signout" method="POST">
                   <DropdownMenuItem asChild>
-                    <button type="submit" className="w-full flex cursor-pointer text-destructive focus:text-destructive">
+                    <button
+                      type="submit"
+                      className="w-full flex cursor-pointer text-destructive focus:text-destructive"
+                    >
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
                     </button>
@@ -177,10 +191,14 @@ export function Navbar({ session }: NavbarProps) {
                 {!session && (
                   <div className="flex flex-col gap-2 mt-4 border-t pt-4">
                     <Button asChild variant="outline">
-                      <Link href="/login" onClick={() => setIsOpen(false)}>Login</Link>
+                      <Link href="/login" onClick={() => setIsOpen(false)}>
+                        Login
+                      </Link>
                     </Button>
                     <Button asChild>
-                      <Link href="/signup" onClick={() => setIsOpen(false)}>Sign up</Link>
+                      <Link href="/signup" onClick={() => setIsOpen(false)}>
+                        Sign up
+                      </Link>
                     </Button>
                   </div>
                 )}

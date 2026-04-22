@@ -6,14 +6,16 @@ export default NextAuth(authConfig).auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
   const role = req.auth?.user?.role;
-  const isAuthRoute = nextUrl.pathname.startsWith("/login") || 
-                      nextUrl.pathname.startsWith("/signup") || 
-                      nextUrl.pathname.startsWith("/reset") || 
-                      nextUrl.pathname.startsWith("/verify");
+  const isAuthRoute =
+    nextUrl.pathname.startsWith("/login") ||
+    nextUrl.pathname.startsWith("/signup") ||
+    nextUrl.pathname.startsWith("/reset") ||
+    nextUrl.pathname.startsWith("/verify");
 
-  const isPublicRoute = nextUrl.pathname === "/" || 
-                        nextUrl.pathname.startsWith("/api/health") ||
-                        nextUrl.pathname.startsWith("/templates");
+  const isPublicRoute =
+    nextUrl.pathname === "/" ||
+    nextUrl.pathname.startsWith("/api/health") ||
+    nextUrl.pathname.startsWith("/templates");
 
   const isApiAuthRoute = nextUrl.pathname.startsWith("/api/auth");
   const isStudioRoute = nextUrl.pathname.startsWith("/studio");

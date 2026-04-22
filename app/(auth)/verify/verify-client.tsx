@@ -13,10 +13,10 @@ export function VerifyClient() {
   const token = searchParams.get("token");
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(
-    token ? "loading" : "error"
+    token ? "loading" : "error",
   );
   const [message, setMessage] = useState(
-    token ? "Verifying your email..." : "No verification token provided."
+    token ? "Verifying your email..." : "No verification token provided.",
   );
 
   useEffect(() => {

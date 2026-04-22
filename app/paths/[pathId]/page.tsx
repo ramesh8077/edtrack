@@ -13,9 +13,9 @@ export default async function PathLandingPage({ params }: { params: Promise<{ pa
     include: {
       modules: {
         orderBy: { order: "asc" },
-        include: { lessons: { orderBy: { order: "asc" }, take: 1 } }
-      }
-    }
+        include: { lessons: { orderBy: { order: "asc" }, take: 1 } },
+      },
+    },
   });
 
   if (!path) redirect("/dashboard");
@@ -29,9 +29,12 @@ export default async function PathLandingPage({ params }: { params: Promise<{ pa
   // If literally no lessons exist
   return (
     <div className="flex h-full items-center justify-center p-8 text-center text-muted-foreground flex-col">
-       <CheckCircle2 className="h-12 w-12 text-primary/40 mb-4" />
-       <h2 className="text-xl font-semibold mb-2">Empty Syllabus</h2>
-       <p className="max-w-md">This learning path generated no lessons. It may have been aborted or is a malformed template. Please generate a new trajectory.</p>
+      <CheckCircle2 className="h-12 w-12 text-primary/40 mb-4" />
+      <h2 className="text-xl font-semibold mb-2">Empty Syllabus</h2>
+      <p className="max-w-md">
+        This learning path generated no lessons. It may have been aborted or is a malformed
+        template. Please generate a new trajectory.
+      </p>
     </div>
   );
 }
