@@ -1,116 +1,328 @@
+"use client";
+
+import { useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { 
+  Cpu, 
+  ArrowRight, 
+  CircuitBoard, 
+  Bot, 
+  Binary, 
+  Layers, 
+  Zap, 
+  Shield, 
+  Terminal,
+  Globe,
+  Code2,
+  Microchip,
+  Wrench
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useRef } from "react";
 
-export default function LandingPage() {
+const disciplines = [
+  {
+    title: "VLSI & Chip Design",
+    description: "Master CMOS layout, digital logic synthesis, and FPGA prototyping for next-gen silicon.",
+    icon: Microchip,
+    color: "from-blue-500 to-cyan-400",
+  },
+  {
+    title: "Embedded Systems",
+    description: "Firmware engineering, RTOS development, and IoT architecture for smart devices.",
+    icon: CircuitBoard,
+    color: "from-emerald-500 to-teal-400",
+  },
+  {
+    title: "Robotics & Control",
+    description: "Mechatronics, automated control theory, and machine vision for autonomous systems.",
+    icon: Bot,
+    color: "from-orange-500 to-amber-400",
+  },
+  {
+    title: "AI & Signal Processing",
+    description: "Optimizing neural networks for edge computing and advanced DSP algorithms.",
+    icon: Binary,
+    color: "from-purple-500 to-indigo-400",
+  },
+];
+
+export default function HomePage() {
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start start", "end start"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
+  const position = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+
   return (
-    <div className="flex-1">
-      <section className="space-y-6 pb-8 pt-16 md:pb-12 md:pt-24 lg:py-32">
-        <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center mx-auto">
-          <Link
-            href="/templates"
-            className="rounded-2xl bg-muted px-4 py-1.5 text-sm font-medium transition-colors hover:bg-muted/80"
+    <div className="relative overflow-hidden selection:bg-primary/30">
+      {/* Background Grid & Ambient Glow */}
+      <div className="fixed inset-0 grid-pattern pointer-events-none -z-10 opacity-20" />
+      <div className="fixed top-0 -left-1/4 w-1/2 h-1/2 bg-primary/20 blur-[120px] rounded-full pointer-events-none -z-10 animate-pulse" />
+      <div className="fixed bottom-0 -right-1/4 w-1/2 h-1/2 bg-blue-500/10 blur-[120px] rounded-full pointer-events-none -z-10" />
+
+      {/* Hero Section */}
+      <section ref={targetRef} className="relative min-h-[90vh] flex items-center justify-center pt-20">
+        <motion.div 
+          style={{ opacity, scale }}
+          className="container mx-auto px-6 text-center space-y-10 relative z-10"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-primary"
           >
-            Explore AI Learning Paths
-          </Link>
-          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold">
-            Your AI learning coach — from goal to mastery.
-          </h1>
-          <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-lg sm:leading-8">
-            Tell us your career goal in plain English. LearnLoop AI generates a personalized,
-            adaptive learning path with AI-driven quizzes and an context-aware tutor to keep you
-            unstuck.
-          </p>
-          <div className="space-x-4 mt-6">
-            <Button asChild size="lg" className="h-12 px-8">
-              <Link href="/signup">Get Started Free</Link>
+            <Zap className="h-3.5 w-3.5 fill-current" /> Next-Gen Engineering Workbench
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl mx-auto"
+          >
+            Build the Future of <br />
+            <span className="text-gradient">Intelligent Systems.</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-medium"
+          >
+            A professional platform for Computer & Electronics Engineers. Master complex hardware, optimize firmware, and deploy AI at the edge.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center pt-6"
+          >
+            <Button asChild size="lg" className="h-16 px-10 rounded-2xl font-black text-lg shadow-2xl shadow-primary/40 hover:scale-105 transition-transform">
+              <Link href="/signup">Start Your Track <ArrowRight className="ml-2 h-5 w-5" /></Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="h-12 px-8">
-              <Link href="/login">Login</Link>
+            <Button asChild variant="outline" size="lg" className="h-16 px-10 rounded-2xl font-black text-lg glass-card">
+              <Link href="/courses">Explore Lab Modules</Link>
             </Button>
+          </motion.div>
+        </motion.div>
+
+        {/* Hero Decorative Elements */}
+        <motion.div
+          animate={{ 
+            rotate: [0, 360],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ 
+            duration: 20, 
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-primary/10 rounded-full pointer-events-none -z-10"
+        />
+      </section>
+
+      {/* Engineering Verticals */}
+      <section className="py-32 relative">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            <div className="space-y-4">
+              <h2 className="text-4xl md:text-5xl font-black tracking-tighter">Professional Verticals</h2>
+              <p className="text-muted-foreground text-lg max-w-xl">
+                Specialized tracks designed by industry veterans to bridge the gap between academia and professional excellence.
+              </p>
+            </div>
+            <Button variant="ghost" className="font-bold group">
+              View All Curriculums <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {disciplines.map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group p-8 rounded-3xl glass-card relative overflow-hidden"
+              >
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center text-white mb-6 shadow-lg group-hover:scale-110 transition-transform`}>
+                  <item.icon className="h-7 w-7" />
+                </div>
+                <h3 className="text-xl font-black mb-3">{item.title}</h3>
+                <p className="text-muted-foreground leading-relaxed text-sm">
+                  {item.description}
+                </p>
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <item.icon className="h-24 w-24" />
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="container space-y-6 bg-slate-50 dark:bg-transparent py-14 mx-auto md:py-20 lg:py-24">
-        <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
-          <h2 className="font-bold text-3xl leading-[1.1] sm:text-3xl md:text-5xl">Features</h2>
-          <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-            Stop wandering across incomplete tutorials. Let the AI structure a complete,
-            comprehensive map of skills you actually need.
-          </p>
-        </div>
-        <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
-          <div className="relative overflow-hidden rounded-lg border bg-background p-2">
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-12 w-12 text-primary"
-              >
-                <path d="m18 16 4-4-4-4" />
-                <path d="m6 8-4 4 4 4" />
-                <path d="m14.5 4-5 16" />
-              </svg>
-              <div className="space-y-2">
-                <h3 className="font-bold">AI Generated Paths</h3>
-                <p className="text-sm text-muted-foreground">
-                  Topics and curriculum structured logically specifically for your goal.
-                </p>
+      {/* AI Engineering Assistant Section */}
+      <section className="py-32 bg-primary/5 border-y border-border/50 relative overflow-hidden">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-8"
+            >
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold text-primary">
+                <Terminal className="h-3.5 w-3.5" /> Intelligent EDA Assistant
               </div>
-            </div>
-          </div>
-          <div className="relative overflow-hidden rounded-lg border bg-background p-2">
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-12 w-12 text-primary"
-              >
-                <path d="M12 2v20" />
-                <path d="m17 5-5-3-5 3v14l5 3 5-3z" />
-              </svg>
-              <div className="space-y-2">
-                <h3 className="font-bold">Adaptive Quizzes</h3>
-                <p className="text-sm text-muted-foreground">
-                  Assessments that adjust to your knowledge level dynamically.
-                </p>
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight">
+                Design Smarter. <br />
+                Debug Faster.
+              </h2>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Our proprietary AI model is trained on millions of hardware schematics and firmware repos. It assists you in Verilog synthesis, PCB layout optimization, and real-time power analysis.
+              </p>
+              
+              <div className="grid grid-cols-2 gap-6">
+                {[
+                  { icon: Shield, text: "Schematic Validation" },
+                  { icon: Globe, text: "Global Standards" },
+                  { icon: Code2, text: "Verilog Debugging" },
+                  { icon: Wrench, text: "Auto-Component Sourcing" }
+                ].map((feature, i) => (
+                  <div key={i} className="flex items-center gap-3 font-bold">
+                    <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+                      <feature.icon className="h-4 w-4" />
+                    </div>
+                    {feature.text}
+                  </div>
+                ))}
               </div>
-            </div>
-          </div>
-          <div className="relative overflow-hidden rounded-lg border bg-background p-2">
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-12 w-12 text-primary"
-              >
-                <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" />
-              </svg>
-              <div className="space-y-2">
-                <h3 className="font-bold">Contextual AI Tutor</h3>
-                <p className="text-sm text-muted-foreground">
-                  Get answers aware of exactly what chapter you are studying.
-                </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative group"
+            >
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-blue-600 rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+              <div className="relative rounded-[2rem] bg-background border border-border p-2 shadow-2xl overflow-hidden">
+                <TerminalContent />
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
+
+      {/* CTA Section */}
+      <section className="py-40 relative">
+        <div className="container mx-auto px-6 text-center space-y-10 relative z-10">
+          <motion.h2 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="text-5xl md:text-7xl font-black tracking-tighter"
+          >
+            Ready to Accelerate Your <br />
+            <span className="text-gradient">Engineering Career?</span>
+          </motion.h2>
+          <p className="text-muted-foreground text-xl max-w-2xl mx-auto font-medium">
+            Join 50,000+ engineering students and professionals mastering the next generation of technology.
+          </p>
+          <div className="flex justify-center gap-6">
+            <Button asChild size="lg" className="h-16 px-10 rounded-2xl font-black text-lg shadow-xl shadow-primary/20">
+              <Link href="/signup">Create Free Account</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function TerminalContent() {
+  const [input, setInput] = useState("");
+  const [history, setHistory] = useState([
+    { type: "system", text: "INITIALIZING AI_ENGINEER_V4.0..." },
+    { type: "system", text: "SYSTEM READY. ENTER GOAL OR CIRCUIT DATA." },
+  ]);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const handleCommand = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const userCommand = input;
+    setHistory(prev => [...prev, { type: "user", text: `$ ${userCommand}` }]);
+    setInput("");
+    setIsTyping(true);
+
+    // Mock AI Response Logic
+    setTimeout(() => {
+      let response = "Analysis complete. No critical issues found.";
+      if (userCommand.toLowerCase().includes("circuit") || userCommand.toLowerCase().includes("pcb")) {
+        response = "RECOMENDATION: Replace IC_7408 with SN74LS08D to reduce leakage current by 12%. Check junction temperature at 85°C.";
+      } else if (userCommand.toLowerCase().includes("verilog") || userCommand.toLowerCase().includes("code")) {
+        response = "OPTIMIZATION: Loop unrolling detected in line 42. Consider using pipelining for 20% throughput increase.";
+      }
+
+      setHistory(prev => [...prev, { type: "ai", text: response }]);
+      setIsTyping(false);
+    }, 1500);
+  };
+
+  return (
+    <div className="bg-muted/30 rounded-[1.5rem] p-8 aspect-square flex flex-col font-mono text-sm overflow-hidden">
+      <div className="flex items-center gap-2 mb-6">
+        <div className="w-3 h-3 rounded-full bg-red-500" />
+        <div className="w-3 h-3 rounded-full bg-amber-500" />
+        <div className="w-3 h-3 rounded-full bg-emerald-500" />
+        <span className="ml-2 text-xs text-muted-foreground">edtrack_assistant --v4.0</span>
+      </div>
+      
+      <div className="flex-1 overflow-y-auto space-y-4 no-scrollbar">
+        {history.map((line, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className={`
+              ${line.type === "user" ? "text-emerald-500" : ""}
+              ${line.type === "ai" ? "p-4 rounded-xl bg-card border border-border text-primary font-bold" : ""}
+              ${line.type === "system" ? "text-muted-foreground" : ""}
+            `}
+          >
+            {line.text}
+          </motion.div>
+        ))}
+        {isTyping && (
+          <div className="flex gap-2 items-center animate-pulse">
+            <div className="w-2 h-4 bg-primary rounded-full" />
+            <p className="text-xs text-muted-foreground">AI is processing data...</p>
+          </div>
+        )}
+      </div>
+
+      <form onSubmit={handleCommand} className="mt-4 flex gap-2 border-t border-border/50 pt-4">
+        <span className="text-emerald-500">$</span>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type command..."
+          className="bg-transparent border-none outline-none flex-1 text-foreground"
+          autoFocus
+        />
+      </form>
     </div>
   );
 }

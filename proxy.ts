@@ -14,8 +14,17 @@ export default NextAuth(authConfig).auth((req) => {
 
   const isPublicRoute =
     nextUrl.pathname === "/" ||
-    nextUrl.pathname.startsWith("/api/health") ||
-    nextUrl.pathname.startsWith("/templates");
+    nextUrl.pathname.startsWith("/courses") ||
+    nextUrl.pathname.startsWith("/lab") ||
+    nextUrl.pathname.startsWith("/community") ||
+    nextUrl.pathname.startsWith("/tools") ||
+    nextUrl.pathname.startsWith("/about") ||
+    nextUrl.pathname.startsWith("/careers") ||
+    nextUrl.pathname.startsWith("/partners") ||
+    nextUrl.pathname.startsWith("/contact") ||
+    nextUrl.pathname.startsWith("/certs") ||
+    nextUrl.pathname.startsWith("/paths") ||
+    nextUrl.pathname.startsWith("/api/health");
 
   const isApiAuthRoute = nextUrl.pathname.startsWith("/api/auth");
   const isStudioRoute = nextUrl.pathname.startsWith("/studio");

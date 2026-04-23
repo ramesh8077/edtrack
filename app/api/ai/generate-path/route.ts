@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { generateObject } from "ai";
 import { getAIModel } from "@/lib/ai/providers";
@@ -68,11 +69,54 @@ ${CONTEXT_INJECTION_DEFENSE}`;
       prompt: `"""${goal}"""`,
     });
 
-    // We can return the structure back to the client to preview.
-    // Tracking usage: We pass `usage.totalTokens` back to client or save it directly.
+    // 5. Persist to Database
+    const learningPath = await db.learningPath.create({
+      data: {
+        userId,
+        title: goal.length > 50 ? goal.substring(0, 50) + "..." : goal,
+        goal,
+        level: level.toUpperCase() as any,
+        targetWeeks,
+        status: "ACTIVE",
+        modules: {
+          create: object.modules.map((m, mIdx) => ({
+            title: m.title,
+            description: m.description,
+            order: mIdx,
+            lessons: {
+              create: m.lessons.map((l, lIdx) => ({
+                title: l.title,
+                contentMd: l.contentMd,
+                estimatedMinutes: l.estimatedMinutes,
+                order: lIdx,
+              })),
+            },
+            quiz: {
+              create: {
+                title: m.quiz.title,
+                passingScore: m.quiz.passingScore,
+                questions: {
+                  create: m.quiz.questions.map((q) => ({
+                    prompt: q.prompt,
+                    type: q.type as any,
+                    options: q.options || [],
+                    correctAnswer: Array.isArray(q.correctAnswer)
+                      ? q.correctAnswer.join(",")
+                      : q.correctAnswer,
+                    explanation: q.explanation,
+                    difficulty: q.difficulty,
+                  })),
+                },
+              },
+            },
+          })),
+        },
+      },
+    });
+
     return NextResponse.json({
       success: true,
-      data: object,
+      data: { id: learningPath.id },
       tokensUsed: usage.totalTokens,
     });
   } catch (error) {
